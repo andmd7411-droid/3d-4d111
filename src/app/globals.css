@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --section1-start: #0066FF;
+  --section1-end: #9933FF;
+  --section2-start: #FF6B35;
+  --section2-end: #FF006E;
+  --section3-start: #00D9A3;
+  --section3-end: #00B4D8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .gradient-section1 {
+    background: linear-gradient(135deg, var(--section1-start) 0%, var(--section1-end) 100%);
+  }
+  
+  .gradient-section2 {
+    background: linear-gradient(135deg, var(--section2-start) 0%, var(--section2-end) 100%);
+  }
+  
+  .gradient-section3 {
+    background: linear-gradient(135deg, var(--section3-start) 0%, var(--section3-end) 100%);
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+    }
+    to {
+      box-shadow: 0 0 30px rgba(153, 51, 255, 0.8);
+    }
+  }
+}
+
+.btn-primary {
+  @apply px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300;
+  @apply hover:scale-105 hover:shadow-2xl active:scale-95;
+}
+
+.card {
+  @apply glass-effect rounded-2xl p-6 transition-all duration-300;
+  @apply hover:scale-[1.02] hover:shadow-2xl;
+}
+
+.section-card {
+  @apply card cursor-pointer relative overflow-hidden;
+}
+
+.section-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.section-card:hover::before {
+  opacity: 0.1;
+}
+
+.section1-card::before {
+  background: linear-gradient(135deg, var(--section1-start) 0%, var(--section1-end) 100%);
+}
+
+.section2-card::before {
+  background: linear-gradient(135deg, var(--section2-start) 0%, var(--section2-end) 100%);
+}
+
+.section3-card::before {
+  background: linear-gradient(135deg, var(--section3-start) 0%, var(--section3-end) 100%);
+}

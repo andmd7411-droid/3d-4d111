@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Vector Converter - Professional File Conversion Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional styles for new features */
+        .toolbar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .tool-btn {
+            padding: 10px 16px;
+            background: rgba(255, 107, 53, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255, 0, 110, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+        }
+
+        .tool-btn.active {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF006E 100%);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .metrics-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-width: 250px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .metrics-panel h4 {
+            margin: 0 0 12px 0;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF006E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 14px;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .metric-label {
+            color: #b0b0b0;
+        }
+
+        .metric-value {
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        .shortcuts-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .shortcuts-panel h3 {
+            margin: 0 0 20px 0;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF006E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .shortcut-key {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF006E 100%);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .shortcut-desc {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+
+        .batch-queue {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .queue-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .queue-remove {
+            margin-left: auto;
+            padding: 4px 8px;
+            background: rgba(255, 0, 110, 0.3);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .split-canvas-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .split-canvas-container canvas {
+            flex: 1;
+        }
+
+        .split-divider {
+            width: 4px;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF006E 100%);
+            cursor: col-resize;
+            position: relative;
+        }
+
+        .export-history {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .history-reuse {
+            padding: 2px 8px;
+            background: rgba(255, 107, 53, 0.3);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <div class="logo">
+                <a href="/"
+                    style="color: white; text-decoration: none; display: block; margin-bottom: 16px; opacity: 0.8; font-size: 14px; transition: opacity 0.3s;">
+                    ← Back to Home
+                </a>
+                <h2>📐 Vector Converter</h2>
+            </div>
+
+            <div class="control-group">
+                <label for="fileInput">Import Image</label>
+                <input type="file" id="fileInput" accept="image/*" aria-label="Upload Image">
+                <button id="btnOpen" class="btn-primary" onclick="document.getElementById('fileInput').click()">📂 Open
+                    Image</button>
+            </div>
+
+            <div class="control-group">
+                <h3>🎯 Smart Presets</h3>
+                <div class="button-grid">
+                    <button id="btnPresetPhoto" class="btn-primary btn-preset">📸 Photo</button>
+                    <button id="btnPresetLogo" class="btn-primary btn-preset">🖼️ Logo</button>
+                    <button id="btnPresetCut" class="btn-primary btn-preset">✂️ Cut</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>🎨 Preprocessing</h3>
+                <div class="slider-control">
+                    <label for="rngBrightness">Brightness: <span id="valBrightness">0</span></label>
+                    <input type="range" id="rngBrightness" min="-100" max="100" value="0"
+                        aria-label="Brightness Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngContrast">Contrast: <span id="valContrast">0</span></label>
+                    <input type="range" id="rngContrast" min="-100" max="100" value="0" aria-label="Contrast Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngGamma">Gamma: <span id="valGamma">1.0</span></label>
+                    <input type="range" id="rngGamma" min="10" max="300" value="100" aria-label="Gamma Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngBlur">Surface Smoothing: <span id="valBlur">0</span></label>
+                    <input type="range" id="rngBlur" min="0" max="100" value="0" aria-label="Blur Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngDenoise">Denoise: <span id="valDenoise">0</span></label>
+                    <input type="range" id="rngDenoise" min="0" max="50" value="0" aria-label="Denoise Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngStrength">Line Strength: <span id="valStrength">0</span></label>
+                    <input type="range" id="rngStrength" min="0" max="100" value="0" aria-label="Strength Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngSharpen">Sharpen: <span id="valSharpen">0</span></label>
+                    <input type="range" id="rngSharpen" min="0" max="100" value="0" aria-label="Sharpen Control">
+                </div>
+                <button id="btnAutoEnhance" class="btn-auto-enhance">✨ Auto-Enhance</button>
+                <div class="checkbox-control">
+                    <input type="checkbox" id="chkInvert">
+                    <label for="chkInvert" class="label-inline">Invert Colors</label>
+                </div>
+                <div class="select-control">
+                    <label for="selResize">Resize Width</label>
+                    <select id="selResize" aria-label="Resize Image">
+                        <option value="0">Original</option>
+                        <option value="1000">1000px</option>
+                        <option value="500">500px</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>🖼️ Dithering / Mode</h3>
+                <select id="selDither" aria-label="Dithering Mode">
+                    <option value="grayscale">Grayscale</option>
+                    <option value="threshold">Threshold (B&W)</option>
+                    <option value="edge">Edge Detection</option>
+                    <option value="floyd">Floyd-Steinberg</option>
+                    <option value="atkinson">Atkinson (Sharper)</option>
+                    <option value="sierra">Sierra-Lite</option>
+                    <option value="stucki">Stucki</option>
+                </select>
+                <div id="thresholdControl" class="slider-control hidden">
+                    <label for="rngThreshold">Threshold: <span id="valThreshold">128</span></label>
+                    <div class="flex-row">
+                        <input type="range" id="rngThreshold" min="0" max="255" value="128"
+                            aria-label="Threshold Control" class="flex-1">
+                        <button id="btnAutoThreshold" class="btn-primary btn-small">Auto</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>📦 Batch Processing</h3>
+                <button id="btnAddToQueue" class="btn-primary">➕ Add to Queue</button>
+                <div id="batchQueue" class="batch-queue"></div>
+                <button id="btnProcessAll" class="btn-accent" style="margin-top: 8px;">⚡ Process All</button>
+            </div>
+
+            <div class="control-group">
+                <h3>💾 Export</h3>
+                <button id="btnReset" class="btn-accent w-full mb-10">🔄 Reset Settings</button>
+                <div class="slider-control">
+                    <label for="rngSmooth">DXF/SVG Smoothness: <span id="valSmooth">1.0</span></label>
+                    <input type="range" id="rngSmooth" min="0" max="50" value="10" aria-label="Smoothness">
+                </div>
+                <div class="button-grid">
+                    <button id="btnExportBMP" class="btn-primary">💾 Save BMP</button>
+                    <button id="btnExportDXF" class="btn-accent">📐 Save DXF</button>
+                    <button id="btnExportSVG" class="btn-svg">🎨 Save SVG</button>
+                </div>
+                <div id="exportHistory" class="export-history"></div>
+            </div>
+        </aside>
+
+        <!-- Main Preview Area -->
+        <main class="preview-area" id="dropZone">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <button id="btnComparison" class="tool-btn">🔍 Compare</button>
+                <button id="btnZoomIn" class="tool-btn">🔎 Zoom+</button>
+                <button id="btnZoomOut" class="tool-btn">🔍 Zoom-</button>
+                <button id="btnResetView" class="tool-btn">⟲ Reset View</button>
+                <button id="btnShortcuts" class="tool-btn">⌨️ Shortcuts</button>
+            </div>
+
+            <!-- Canvas Container -->
+            <div id="canvasContainer">
+                <canvas id="mainCanvas"></canvas>
+            </div>
+
+            <!-- Quality Metrics Panel -->
+            <div id="metricsPanel" class="metrics-panel hidden">
+                <h4>📊 Quality Metrics</h4>
+                <div class="metric-item">
+                    <span class="metric-label">Processing Time:</span>
+                    <span class="metric-value" id="metricTime">-</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">File Size Est.:</span>
+                    <span class="metric-value" id="metricSize">-</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Vector Paths:</span>
+                    <span class="metric-value" id="metricPaths">-</span>
+                </div>
+            </div>
+
+            <div id="dropText" class="drop-message">
+                📷 Drop Image Here<br>or Click Open
+            </div>
+        </main>
+    </div>
+
+    <!-- Keyboard Shortcuts Panel (Hidden by default) -->
+    <div id="shortcutsPanel" class="shortcuts-panel hidden">
+        <h3>⌨️ Keyboard Shortcuts</h3>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Show/Hide Shortcuts</span>
+            <span class="shortcut-key">?</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Photo Preset</span>
+            <span class="shortcut-key">1</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Logo Preset</span>
+            <span class="shortcut-key">2</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Cut Preset</span>
+            <span class="shortcut-key">3</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Toggle Edge Detection</span>
+            <span class="shortcut-key">E</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Toggle Comparison</span>
+            <span class="shortcut-key">Space</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Reset View</span>
+            <span class="shortcut-key">R</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Save BMP</span>
+            <span class="shortcut-key">Ctrl+S</span>
+        </div>
+        <button class="btn-primary w-full" style="margin-top: 20px;"
+            onclick="document.getElementById('shortcutsPanel').classList.add('hidden')">Close</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/vectorizer.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/app-extensions.js"></script>
+</body>
+
+</html>
