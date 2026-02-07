@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser Engraving Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <a href="/3d-4d111/" class="btn-back">
+                ← Back to Home
+            </a>
+            <div class="logo">
+                <h2>Laser Engraving Studio</h2>
+            </div>
+
+            <div class="control-group">
+                <label for="fileInput">Import Image</label>
+                <input type="file" id="fileInput" accept="image/*" aria-label="Upload Image">
+                <button id="btnOpen" onclick="document.getElementById('fileInput').click()">Open Image</button>
+            </div>
+
+            <div class="control-group">
+                <h3>Smart Presets</h3>
+                <div class="button-grid">
+                    <button id="btnPresetPhoto" class="btn-primary btn-preset">📸 Photo</button>
+                    <button id="btnPresetLogo" class="btn-primary btn-preset">🖼️ Logo</button>
+                    <button id="btnPresetCut" class="btn-primary btn-preset">✂️ Cut</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Preprocessing</h3>
+                <div class="slider-control">
+                    <label for="rngBrightness">Brightness: <span id="valBrightness">0</span></label>
+                    <input type="range" id="rngBrightness" min="-100" max="100" value="0"
+                        aria-label="Brightness Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngContrast">Contrast: <span id="valContrast">0</span></label>
+                    <input type="range" id="rngContrast" min="-100" max="100" value="0" aria-label="Contrast Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngGamma">Gamma: <span id="valGamma">1.0</span></label>
+                    <input type="range" id="rngGamma" min="10" max="300" value="100" aria-label="Gamma Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngBlur">Surface Smoothing: <span id="valBlur">0</span></label>
+                    <input type="range" id="rngBlur" min="0" max="100" value="0" aria-label="Blur Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngDenoise">Denoise: <span id="valDenoise">0</span></label>
+                    <input type="range" id="rngDenoise" min="0" max="50" value="0" aria-label="Denoise Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngStrength">Line Strength: <span id="valStrength">0</span></label>
+                    <input type="range" id="rngStrength" min="0" max="100" value="0" aria-label="Strength Control">
+                </div>
+                <div class="slider-control">
+                    <label for="rngSharpen">Sharpen: <span id="valSharpen">0</span></label>
+                    <input type="range" id="rngSharpen" min="0" max="100" value="0" aria-label="Sharpen Control">
+                </div>
+                <button id="btnAutoEnhance" class="btn-primary btn-auto-enhance">✨ Auto-Enhance</button>
+                <div class="checkbox-control">
+                    <input type="checkbox" id="chkInvert">
+                    <label for="chkInvert" class="label-inline">Invert Colors</label>
+                </div>
+                <div class="select-control">
+                    <label for="selResize">Resize Width</label>
+                    <select id="selResize" aria-label="Resize Image">
+                        <option value="0">Original</option>
+                        <option value="1000">1000px</option>
+                        <option value="500">500px</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Dithering / Mode</h3>
+                <select id="selDither" aria-label="Dithering Mode">
+                    <option value="grayscale">Grayscale</option>
+                    <option value="threshold">Threshold (B&W)</option>
+                    <option value="edge">Edge Detection</option>
+                    <option value="floyd">Floyd-Steinberg</option>
+                    <option value="atkinson">Atkinson (Sharper)</option>
+                    <option value="sierra">Sierra-Lite</option>
+                    <option value="stucki">Stucki</option>
+                </select>
+                <div id="thresholdControl" class="slider-control hidden">
+                    <label for="rngThreshold">Threshold: <span id="valThreshold">128</span></label>
+                    <div class="flex-row">
+                        <input type="range" id="rngThreshold" min="0" max="255" value="128"
+                            aria-label="Threshold Control" class="flex-1">
+                        <button id="btnAutoThreshold" class="btn-primary btn-small">Auto</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Export</h3>
+                <button id="btnReset" class="btn-accent w-full mb-10">Reset Settings</button>
+                <div class="slider-control">
+                    <label for="rngSmooth">DXF/SVG Smoothness: <span id="valSmooth">1.0</span></label>
+                    <input type="range" id="rngSmooth" min="0" max="50" value="10" aria-label="Smoothness">
+                </div>
+                <div class="button-grid">
+                    <button id="btnExportBMP" class="btn-primary">Save BMP</button>
+                    <button id="btnExportDXF" class="btn-accent">Save DXF</button>
+                    <button id="btnExportSVG" class="btn-svg">Save SVG</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Preview Area -->
+        <main class="preview-area" id="dropZone">
+            <canvas id="mainCanvas"></canvas>
+            <div id="dropText" class="drop-message">
+                Drop Image Here<br>or Click Open
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Simple libraries for vectorization could be added here, we'll write a custom one or simple one -->
+    <script src="js/vectorizer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

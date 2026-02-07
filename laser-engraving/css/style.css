@@ -1,0 +1,244 @@
+:root {
+    --bg-dark: #2b2b2b;
+    --bg-panel: #333;
+    --bg-input: #444;
+    --text-main: #e0e0e0;
+    --text-dim: #888;
+    --accent: #00cca3;
+    --primary: #007acc;
+    --primary-hover: #0098ff;
+    --border: #555;
+    --font-main: "Segoe UI", "Roboto", sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.logo h2 {
+    margin: 0 0 20px 0;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+
+.control-group {
+    background-color: #2a2a2a;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+}
+
+.control-group h3 {
+    margin-top: 0;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Inputs */
+input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+select,
+input[type="file"] {
+    width: 100%;
+    background-color: var(--bg-input);
+    color: white;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    display: none;
+    /* Hidden, triggered by button */
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    background-color: var(--bg-input);
+    color: white;
+    margin-bottom: 5px;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-accent {
+    background-color: var(--accent);
+    color: #222;
+}
+
+.btn-accent:hover {
+    background-color: #00ffcc;
+}
+
+.button-row,
+.button-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.button-grid button {
+    flex: 1 1 45%;
+    min-width: 80px;
+}
+
+.checkbox-control {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-control input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.label-inline {
+    display: inline;
+    margin-bottom: 0;
+}
+
+.btn-svg:hover {
+    background-color: #8e24aa;
+}
+
+.btn-back {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    width: auto;
+    padding: 8px 12px;
+}
+
+.btn-back:hover {
+    background-color: var(--bg-input);
+    color: white;
+    border-color: white;
+}
+
+.btn-auto-enhance {
+    margin-top: 5px;
+    font-size: 11px;
+    padding: 5px;
+}
+
+.btn-small {
+    padding: 2px 5px;
+    font-size: 10px;
+}
+
+.btn-preset {
+    font-size: 11px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* Preview Area */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    position: relative;
+    overflow: auto;
+}
+
+canvas {
+    max-width: 95%;
+    max-height: 95%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="10" height="10" fill="%23333"/><rect x="10" y="0" width="10" height="10" fill="%23222"/><rect x="0" y="10" width="10" height="10" fill="%23222"/><rect x="10" y="10" width="10" height="10" fill="%23333"/></svg>');
+}
+
+.drop-message {
+    position: absolute;
+    color: #666;
+    font-size: 24px;
+    pointer-events: none;
+    text-align: center;
+    border: 3px dashed #444;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
+}
