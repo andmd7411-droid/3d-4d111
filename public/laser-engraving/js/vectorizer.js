@@ -244,15 +244,9 @@ window.Vectorizer = {
 
         const loops = this.chainLines(lines);
 
-        console.log(`Vectorizer: Generated ${lines.length} raw lines, chained into ${loops.length} loops`);
-
-        // NOISE REMOVAL: Remove very short paths
-        // Reduced from 4 to 2 to allow smaller shapes
-        const filtered = loops.filter(p => p.length >= 2);
-
-        console.log(`Vectorizer: After filtering, ${filtered.length} loops remain`);
-
-        return filtered;
+        // NOISE REMOVAL: Remove very short paths (less than 3 segments)
+        // This eliminates the "dust" visible in noisy photos.
+        return loops.filter(p => p.length >= 4);
     },
 
     chainLines: function (lines) {

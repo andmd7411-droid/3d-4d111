@@ -4,9 +4,13 @@ import { useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Scene3D from '@/components/3d/Scene3D'
 import ToolsPanel from '@/components/3d/ToolsPanel'
+import Image from 'next/image'
 import SettingsPanel, { Settings3D } from '@/components/3d/SettingsPanel'
 import { generateMeshFromImage } from '@/lib/converters/imageToSTL'
 import { exportSTL } from '@/lib/converters/stlExporter'
+import { useAuth } from '@/lib/auth'
+import { AuthModal } from '@/components/AuthModal'
+import { PaymentOverlay } from '@/components/PaymentOverlay'
 
 export default function Converter3DPage() {
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -43,6 +47,9 @@ export default function Converter3DPage() {
         lightIntensity: 1.8,
         showGrid: true
     })
+    const { user } = useAuth()
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+    const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +77,14 @@ export default function Converter3DPage() {
     }, [imagePreview, isProcessing])
 
     const regenerateMesh = async (dataUrl: string, currentSettings: Settings3D) => {
+        // Temporarily disabled for testing
+        /*
+        if (!user) {
+            setIsAuthModalOpen(true)
+            return
+        }
+        */
+
         setIsProcessing(true)
         setProgress(0)
 
@@ -106,6 +121,17 @@ export default function Converter3DPage() {
         } finally {
             setIsProcessing(false)
         }
+    }
+
+    const handleExportClick = () => {
+        // Temporarily disabled for testing
+        /*
+        if (!user?.isPremium) {
+            setIsPaymentOverlayOpen(true)
+            return
+        }
+        */
+        handleExportSTL()
     }
 
     const handleExportSTL = useCallback(() => {
@@ -160,7 +186,15 @@ export default function Converter3DPage() {
                         className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center cursor-pointer hover:border-white/60 transition-all hover:bg-white/5"
                     >
                         {imagePreview ? (
-                            <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg mb-2" />
+                            <div className="relative w-full h-32 mb-2">
+                                <Image
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    fill
+                                    className="object-cover rounded-lg"
+                                    unoptimized
+                                />
+                            </div>
                         ) : (
                             <div className="text-white/60">
                                 <div className="text-4xl mb-2">📁</div>
@@ -193,7 +227,7 @@ export default function Converter3DPage() {
 
                     {meshData && (
                         <button
-                            onClick={handleExportSTL}
+                            onClick={handleExportClick}
                             className="btn-primary w-full bg-white text-purple-900 hover:bg-white/90 font-bold"
                         >
                             💾 Export STL
@@ -234,6 +268,19 @@ export default function Converter3DPage() {
                     <ToolsPanel meshData={meshData} onMeshUpdate={setMeshData} />
                 </div>
             </div>
+
+            <AuthModal
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
+            />
+            <PaymentOverlay
+                isOpen={isPaymentOverlayOpen}
+                onClose={() => setIsPaymentOverlayOpen(false)}
+                onSuccess={() => {
+                    setIsPaymentOverlayOpen(false)
+                    handleExportSTL()
+                }}
+            />
         </div>
     )
 }

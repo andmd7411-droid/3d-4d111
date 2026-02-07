@@ -7,6 +7,9 @@ import { DocumentConverter, DocumentFormat, DocumentConversionOptions } from '@/
 import { ModelConverter, ModelFormat, ModelConversionOptions } from '@/lib/converter/ModelConverter'
 import { MediaConverter, MediaFormat, MediaConversionOptions } from '@/lib/converter/MediaConverter'
 import { ArchiveConverter, ArchiveFormat, ArchiveConversionOptions } from '@/lib/converter/ArchiveConverter'
+import { useAuth } from '@/lib/auth'
+import { AuthModal } from '@/components/AuthModal'
+import { PaymentOverlay } from '@/components/PaymentOverlay'
 
 interface ConversionOption {
     from: string
@@ -63,6 +66,9 @@ export default function UniversalConverterPage() {
     const [convertedBlob, setConvertedBlob] = useState<Blob | null>(null)
     const [conversionTime, setConversionTime] = useState<number>(0)
     const [statusMessage, setStatusMessage] = useState<string>('')
+    const { user } = useAuth()
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+    const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     // Image Settings
@@ -111,6 +117,14 @@ export default function UniversalConverterPage() {
 
     const handleConvert = useCallback(async () => {
         if (!selectedFile || !targetFormat) return
+
+        // Temporarily disabled for testing
+        /*
+        if (!user) {
+            setIsAuthModalOpen(true)
+            return
+        }
+        */
 
         setIsConverting(true)
         setProgress(10)
@@ -188,6 +202,17 @@ export default function UniversalConverterPage() {
             setIsConverting(false)
         }
     }, [selectedFile, targetFormat, selectedCategory, quality, resizeWidth, resizeHeight, maintainAspect, fontSize, margin, isBinary])
+
+    const handleDownloadClick = () => {
+        // Temporarily disabled for testing
+        /*
+        if (!user?.isPremium) {
+            setIsPaymentOverlayOpen(true)
+            return
+        }
+        */
+        handleDownload()
+    }
 
     const handleDownload = useCallback(() => {
         if (!convertedBlob && !selectedFile) return
@@ -285,7 +310,7 @@ export default function UniversalConverterPage() {
                             )}
                         </div>
 
-                        <input ref={fileInputRef} type="file" onChange={handleFileSelect} className="hidden" />
+                        <input ref={fileInputRef} type="file" onChange={handleFileSelect} className="hidden" aria-label="File Upload" />
 
                         {selectedFile && (
                             <button
@@ -339,6 +364,7 @@ export default function UniversalConverterPage() {
                                                 value={quality}
                                                 onChange={(e) => setQuality(parseFloat(e.target.value))}
                                                 className="w-full accent-white"
+                                                aria-label="Image Quality"
                                             />
                                         </div>
 
@@ -386,6 +412,7 @@ export default function UniversalConverterPage() {
                                                 value={fontSize}
                                                 onChange={(e) => setFontSize(Number(e.target.value))}
                                                 className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white text-sm"
+                                                aria-label="Font Size"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -395,6 +422,7 @@ export default function UniversalConverterPage() {
                                                 value={margin}
                                                 onChange={(e) => setMargin(Number(e.target.value))}
                                                 className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white text-sm"
+                                                aria-label="Margin"
                                             />
                                         </div>
                                     </div>
@@ -409,6 +437,7 @@ export default function UniversalConverterPage() {
                                                 checked={isBinary}
                                                 onChange={(e) => setIsBinary(e.target.checked)}
                                                 className="rounded"
+                                                aria-label="Binary Export"
                                             />
                                             <label className="text-white text-sm">Binary Export (Smaller Size)</label>
                                         </div>
@@ -456,7 +485,7 @@ export default function UniversalConverterPage() {
                                             Time: {conversionTime}ms • Size: {(convertedBlob.size / 1024).toFixed(2)} KB
                                         </p>
                                         <button
-                                            onClick={handleDownload}
+                                            onClick={handleDownloadClick}
                                             className="btn-primary w-full bg-green-500 hover:bg-green-600 text-white shadow-lg animate-pulse"
                                         >
                                             💾 Download {targetFormat}
@@ -474,6 +503,15 @@ export default function UniversalConverterPage() {
                     </div>
                 </div>
             </div>
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+            <PaymentOverlay
+                isOpen={isPaymentOverlayOpen}
+                onClose={() => setIsPaymentOverlayOpen(false)}
+                onSuccess={() => {
+                    setIsPaymentOverlayOpen(false)
+                    handleDownload()
+                }}
+            />
         </div>
     )
 }

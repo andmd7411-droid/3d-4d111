@@ -2,9 +2,13 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { useAuth } from '@/lib/auth'
+import { AuthModal } from '@/components/AuthModal'
 
 export default function HomePage() {
+    const { user, logout } = useAuth()
     const [hoveredSection, setHoveredSection] = useState<number | null>(null)
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
     const sections = [
         {
@@ -18,8 +22,8 @@ export default function HomePage() {
         },
         {
             id: 2,
-            title: 'Image to Vector Converter',
-            description: 'Convert photos to BMP and DXF with professional vectorization',
+            title: 'Laser Engraving Studio',
+            description: 'Professional laser engraving and DXF path optimization tools',
             features: ['High-Quality BMP Export', 'Precision DXF Vectorization', 'Image Editing Suite', 'Edge Detection', 'Path Optimization'],
             gradient: 'gradient-section2',
             href: '/vector-converter',
@@ -37,7 +41,18 @@ export default function HomePage() {
     ]
 
     return (
-        <main className="min-h-screen p-8">
+        <main className="min-h-screen p-8 bg-[#0a0a1a] selection:bg-blue-500/30">
+            {/* Top Bar */}
+            <nav className="max-w-7xl mx-auto flex justify-between items-center mb-12 py-4">
+                <div className="text-2xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    CONVERT.STUDIO
+                </div>
+                <div className="flex items-center gap-6">
+                    <span className="text-gray-400 text-sm italic">Testing Mode - All Features Unlocked</span>
+                    {/* User profile section disabled for testing */}
+                </div>
+            </nav>
+
             {/* Header */}
             <header className="text-center mb-16 animate-float">
                 <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -85,16 +100,18 @@ export default function HomePage() {
 
                         {/* CTA Button */}
                         <button className={`btn-primary w-full ${section.gradient} ${hoveredSection === section.id ? 'animate-glow' : ''}`}>
-                            Open Converter
+                            Open Studio
                         </button>
                     </Link>
                 ))}
             </div>
 
             {/* Footer */}
-            <footer className="text-center mt-16 text-gray-500">
+            <footer className="text-center mt-24 text-gray-500 border-t border-white/5 pt-8 max-w-7xl mx-auto">
                 <p>© 2026 Professional File Conversion Studio - All Rights Reserved</p>
             </footer>
+
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         </main>
     )
 }

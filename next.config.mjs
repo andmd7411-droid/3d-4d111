@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/3d-4d",
+  output: 'export',
+  basePath: "/3d-4d111",
   images: {
     unoptimized: true,
   },
@@ -20,7 +21,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  output: 'export',
   async headers() {
     return [
       {
