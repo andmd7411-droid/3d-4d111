@@ -66,43 +66,83 @@ export default function HomePage() {
             {/* Sections Grid */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sections.map((section) => (
-                    <Link
-                        key={section.id}
-                        href={section.href}
-                        className={`section-card section${section.id}-card group`}
-                        onMouseEnter={() => setHoveredSection(section.id)}
-                        onMouseLeave={() => setHoveredSection(null)}
-                    >
-                        {/* Icon */}
-                        <div className="text-6xl mb-4 transform transition-transform group-hover:scale-110 group-hover:rotate-12">
-                            {section.icon}
-                        </div>
+                    section.href.endsWith('.html') ? (
+                        <a
+                            key={section.id}
+                            href={`/3d-4d${section.href}`}
+                            className={`section-card section${section.id}-card group block`}
+                            onMouseEnter={() => setHoveredSection(section.id)}
+                            onMouseLeave={() => setHoveredSection(null)}
+                        >
+                            {/* Icon */}
+                            <div className="text-6xl mb-4 transform transition-transform group-hover:scale-110 group-hover:rotate-12">
+                                {section.icon}
+                            </div>
 
-                        {/* Title */}
-                        <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                            {section.title}
-                        </h2>
+                            {/* Title */}
+                            <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                {section.title}
+                            </h2>
 
-                        {/* Description */}
-                        <p className="text-gray-300 mb-6">
-                            {section.description}
-                        </p>
+                            {/* Description */}
+                            <p className="text-gray-300 mb-6">
+                                {section.description}
+                            </p>
 
-                        {/* Features */}
-                        <ul className="space-y-2 mb-6">
-                            {section.features.map((feature, idx) => (
-                                <li key={idx} className="flex items-center text-sm text-gray-400">
-                                    <span className={`w-2 h-2 rounded-full mr-2 ${section.gradient}`}></span>
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
+                            {/* Features */}
+                            <ul className="space-y-2 mb-6">
+                                {section.features.map((feature, idx) => (
+                                    <li key={idx} className="flex items-center text-sm text-gray-400">
+                                        <span className={`w-2 h-2 rounded-full mr-2 ${section.gradient}`}></span>
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
 
-                        {/* CTA Button */}
-                        <button className={`btn-primary w-full ${section.gradient} ${hoveredSection === section.id ? 'animate-glow' : ''}`}>
-                            Open Studio
-                        </button>
-                    </Link>
+                            {/* CTA Button */}
+                            <button className={`btn-primary w-full ${section.gradient} ${hoveredSection === section.id ? 'animate-glow' : ''}`}>
+                                Open Studio
+                            </button>
+                        </a>
+                    ) : (
+                        <Link
+                            key={section.id}
+                            href={section.href}
+                            className={`section-card section${section.id}-card group`}
+                            onMouseEnter={() => setHoveredSection(section.id)}
+                            onMouseLeave={() => setHoveredSection(null)}
+                        >
+                            {/* Icon */}
+                            <div className="text-6xl mb-4 transform transition-transform group-hover:scale-110 group-hover:rotate-12">
+                                {section.icon}
+                            </div>
+
+                            {/* Title */}
+                            <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                {section.title}
+                            </h2>
+
+                            {/* Description */}
+                            <p className="text-gray-300 mb-6">
+                                {section.description}
+                            </p>
+
+                            {/* Features */}
+                            <ul className="space-y-2 mb-6">
+                                {section.features.map((feature, idx) => (
+                                    <li key={idx} className="flex items-center text-sm text-gray-400">
+                                        <span className={`w-2 h-2 rounded-full mr-2 ${section.gradient}`}></span>
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* CTA Button */}
+                            <button className={`btn-primary w-full ${section.gradient} ${hoveredSection === section.id ? 'animate-glow' : ''}`}>
+                                Open Studio
+                            </button>
+                        </Link>
+                    )
                 ))}
             </div>
 
