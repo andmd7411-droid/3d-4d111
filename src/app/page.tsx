@@ -26,7 +26,7 @@ export default function HomePage() {
             description: 'Professional laser engraving and DXF path optimization tools',
             features: ['High-Quality BMP Export', 'Precision DXF Vectorization', 'Image Editing Suite', 'Edge Detection', 'Path Optimization'],
             gradient: 'gradient-section2',
-            href: '/vector-converter',
+            href: '/laser-engraving/index.html',
             icon: '📐'
         },
         {
