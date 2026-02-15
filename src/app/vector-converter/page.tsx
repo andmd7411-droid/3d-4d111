@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 export default function VectorConverterPage() {
     useEffect(() => {
         // Redirect to the laser engraving app using the relative path from basePath
-        window.location.href = './laser-engraving/index.html'
+        window.location.href = '/3d-4d/laser-engraving/index.html'
     }, [])
 
     return (
