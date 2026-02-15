@@ -32,6 +32,8 @@ const rngBrightness = document.getElementById('rngBrightness');
 const rngContrast = document.getElementById('rngContrast');
 const rngGamma = document.getElementById('rngGamma');
 const rngDenoise = document.getElementById('rngDenoise');
+const rngBlur = document.getElementById('rngBlur');
+const rngStrength = document.getElementById('rngStrength');
 const rngSharpen = document.getElementById('rngSharpen');
 const chkInvert = document.getElementById('chkInvert');
 const selResize = document.getElementById('selResize');
@@ -799,20 +801,24 @@ function exportDXF() {
         if (!confirm) return;
     }
 
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const lines = Vectorizer.marchingSquares(imgData.data, canvas.width, canvas.height);
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.getImageData(0, 0, w, h);
 
-    if (lines.length === 0) {
-        alert("No vectors found! Algorithm returned 0 lines.");
-        return;
-    }
+    // 1. Vectorize (Marching Squares) -> Potrace or custom
+    const contours = Vectorizer.marchingSquares(imgData.data, w, h);
 
-    const dxfString = Vectorizer.generateDXF(lines);
-    const blob = new Blob([dxfString], { type: 'application/dxf' });
+    // 2. Generate DXF
+    const dxfContent = Vectorizer.generateDXF(contours);
+
+    // 3. Download
+    const blob = new Blob([dxfContent], { type: 'application/dxf' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'vector_cut.dxf';
+    link.download = 'engraving.dxf';
+    link.href = url;
     link.click();
+    URL.revokeObjectURL(url);
 }
 
 function exportSVG() {
@@ -820,24 +826,18 @@ function exportSVG() {
         alert("Please load an image first!");
         return;
     }
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.getImageData(0, 0, w, h);
 
-    if (currentSettings.dither === 'floyd' || currentSettings.dither === 'grayscale') {
-        const confirm = window.confirm("You are exporting a Dithered/Grayscale image to SVG.\nThis will create millions of points.\nRecommended: Use 'Threshold' or 'Edge Detection' mode for clean vectors.\n\nContinue anyway?");
-        if (!confirm) return;
-    }
+    const contours = Vectorizer.marchingSquares(imgData.data, w, h);
+    const svgContent = Vectorizer.generateSVG(contours, w, h);
 
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const lines = Vectorizer.marchingSquares(imgData.data, canvas.width, canvas.height);
-
-    if (lines.length === 0) {
-        alert("No vectors found! Algorithm returned 0 lines.");
-        return;
-    }
-
-    const svgString = Vectorizer.generateSVG(lines, canvas.width, canvas.height);
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+    const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'vector_cut.svg';
+    link.download = 'engraving.svg';
+    link.href = url;
     link.click();
+    URL.revokeObjectURL(url);
 }

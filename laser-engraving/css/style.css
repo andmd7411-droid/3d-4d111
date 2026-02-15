@@ -152,29 +152,13 @@ button {
     margin-bottom: 0;
 }
 
+.btn-svg {
+    background-color: #6a1b9a;
+    color: white;
+}
+
 .btn-svg:hover {
     background-color: #8e24aa;
-}
-
-.btn-back {
-    background-color: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    margin-bottom: 20px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    width: auto;
-    padding: 8px 12px;
-}
-
-.btn-back:hover {
-    background-color: var(--bg-input);
-    color: white;
-    border-color: white;
 }
 
 .btn-auto-enhance {
